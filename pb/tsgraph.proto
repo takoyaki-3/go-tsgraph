@@ -1,0 +1,26 @@
+syntax = "proto3";
+package ppb;
+
+message TSGraph {
+  string name = 1;
+	repeated Point point = 2;
+	repeated Edge edge = 3;
+  repeated string places = 4;
+  repeated string labels = 5;
+  repeated string types = 6;
+}
+
+message Point {
+	int32 place = 1;
+	int32 time = 2;
+  int32 type = 3;
+  int32 label = 4;
+}
+
+message Edge {
+	int32 from_point = 1;
+	int32 to_point = 2;
+	int32 type = 3;
+  int32 label = 4;
+	repeated double weight = 5;
+}
