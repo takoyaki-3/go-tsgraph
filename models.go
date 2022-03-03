@@ -67,6 +67,7 @@ func (ts *TSGraph) GetPlaceIndex(place string) int {
 	pi := len(ts.placeIndex)
 	ts.placeIndex[place] = pi
 	ts.Places = append(ts.Places, place)
+	ts.PlacePoints = append(ts.PlacePoints, []int{})
 	return pi
 }
 
@@ -102,6 +103,11 @@ func (ts *TSGraph) SetIndexes() {
 	ts.typeIndex = map[string]int{}
 	ts.labelIndex = map[string]int{}
 	ts.pointHexes = map[string]int{}
+	ts.placeIndex[""] = 0
+	ts.typeIndex[""] = 0
+	ts.labelIndex[""] = 0
+	ts.pointHexes[""] = 0
+	ts.PlacePoints = append(ts.PlacePoints, []int{})
 	for i, v := range ts.Places {
 		ts.placeIndex[v] = i
 	}
