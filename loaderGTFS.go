@@ -53,7 +53,7 @@ func LoadFromGTFS(g *gtfs.GTFS) (*TSGraph,error){
 		if e.PickupType != 1 {
 			ts.AddEdge(Edge{
 				FromPoint: ts.Point(e.FromStop, HHMMSS2Sec(e.DepartureTime), "PT_Stop"),
-				ToPoint:   ts.Point(e.ToStop, HHMMSS2Sec(e.ArrivalTime), "PT_Event"),
+				ToPoint:   ts.Point(e.FromStop, HHMMSS2Sec(e.DepartureTime), "PT_Event"),
 				TypeIndex: ts.SetType("ET_Stop2PT"),
 			})
 		}
@@ -65,7 +65,7 @@ func LoadFromGTFS(g *gtfs.GTFS) (*TSGraph,error){
 		})
 		if e.DropOffType != 1 {
 			ts.AddEdge(Edge{
-				FromPoint: ts.Point(e.FromStop, HHMMSS2Sec(e.DepartureTime), "PT_Event"),
+				FromPoint: ts.Point(e.ToStop, HHMMSS2Sec(e.ArrivalTime), "PT_Event"),
 				ToPoint:   ts.Point(e.ToStop, HHMMSS2Sec(e.ArrivalTime), "PT_Stop"),
 				TypeIndex: ts.SetType("ET_PT2Stop"),
 			})
