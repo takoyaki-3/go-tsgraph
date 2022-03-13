@@ -1,13 +1,13 @@
 package gotsgraph
 
 import (
-	"time"
 	. "github.com/takoyaki-3/go-geojson"
 	gojson "github.com/takoyaki-3/go-json"
-	gm "github.com/takoyaki-3/go-map"
+	gm "github.com/takoyaki-3/go-map/v2"
+	"time"
 )
 
-func (ts *TSGraph)DumpToGeoJSON(g *gm.Graph,date time.Time,graphFileName, tripsFileName string)error{
+func (ts *TSGraph) DumpToGeoJSON(g *gm.Graph, date time.Time, graphFileName, tripsFileName string) error {
 	fc1 := FeatureCollection{
 		Type: "FeatureCollection",
 	}

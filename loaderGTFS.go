@@ -1,30 +1,27 @@
 package gotsgraph
 
 import (
-	"time"
 	"sort"
+	"time"
 
-	gtfs "github.com/takoyaki-3/go-gtfs"
-	et "github.com/takoyaki-3/go-gtfs/edge_timetable"
-	. "github.com/takoyaki-3/go-gtfs/pkg"
-	"github.com/takoyaki-3/go-gtfs/tool"
+	gtfs "github.com/takoyaki-3/go-gtfs/v2"
 )
 
-func LoadFromGTFSPath(dirPath string,date string) (*TSGraph, error) {
+func LoadFromGTFSPath(dirPath string, date string) (*TSGraph, error) {
 	g, err := gtfs.Load(dirPath, nil)
 	if err != nil {
-		return &TSGraph{},err
+		return &TSGraph{}, err
 	}
-	
-	if t,err := time.Parse("20060102",date);err!=nil{
-		return &TSGraph{},err
+
+	if t, err := time.Parse("20060102", date); err != nil {
+		return &TSGraph{}, err
 	} else {
-		g = tool.ExtractByDate(g,t)
+		g = g.ExtractByDate(t)
 		return LoadFromGTFS(g)
 	}
 }
 
-func LoadFromGTFS(g *gtfs.GTFS) (*TSGraph,error){
+func LoadFromGTFS(g *gtfs.GTFS) (*TSGraph, error) {
 	ts := new(TSGraph)
 	ts.pointHexes = map[string]int{}
 	ts.placeIndex = map[string]int{}
@@ -40,8 +37,8 @@ func LoadFromGTFS(g *gtfs.GTFS) (*TSGraph,error){
 	ts.PlacePoints = append(ts.PlacePoints, []int{})
 
 	// 変換
-	edgeTimetable := et.GTFS2TimeTableEdges(g)
-	sort.Slice(edgeTimetable.Edges,func(i,j int)bool{
+	edgeTimetable := g.GTFS2TimeTableEdges()
+	sort.Slice(edgeTimetable.Edges, func(i, j int) bool {
 		iv := edgeTimetable.Edges[i]
 		jv := edgeTimetable.Edges[j]
 		iStr := iv.FromStop + ":" + iv.ToStop + ":" + iv.DepartureTime + ":" + iv.ArrivalTime + ":" + iv.TripId
@@ -52,21 +49,21 @@ func LoadFromGTFS(g *gtfs.GTFS) (*TSGraph,error){
 	for _, e := range edgeTimetable.Edges {
 		if e.PickupType != 1 {
 			ts.AddEdge(Edge{
-				FromPoint: ts.Point(e.FromStop, HHMMSS2Sec(e.DepartureTime), "PT_Stop"),
-				ToPoint:   ts.Point(e.FromStop, HHMMSS2Sec(e.DepartureTime), "PT_Event"),
+				FromPoint: ts.Point(e.FromStop, gtfs.HHMMSS2Sec(e.DepartureTime), "PT_Stop"),
+				ToPoint:   ts.Point(e.FromStop, gtfs.HHMMSS2Sec(e.DepartureTime), "PT_Event"),
 				TypeIndex: ts.SetType("ET_Stop2PT"),
 			})
 		}
 		ts.AddEdge(Edge{
-			FromPoint:  ts.Point(e.FromStop, HHMMSS2Sec(e.DepartureTime), "PT_Event"),
-			ToPoint:    ts.Point(e.ToStop, HHMMSS2Sec(e.ArrivalTime), "PT_Event"),
+			FromPoint:  ts.Point(e.FromStop, gtfs.HHMMSS2Sec(e.DepartureTime), "PT_Event"),
+			ToPoint:    ts.Point(e.ToStop, gtfs.HHMMSS2Sec(e.ArrivalTime), "PT_Event"),
 			TypeIndex:  ts.SetType("ET_PublicTransport"),
 			LabelIndex: ts.SetLabel(e.TripId),
 		})
 		if e.DropOffType != 1 {
 			ts.AddEdge(Edge{
-				FromPoint: ts.Point(e.ToStop, HHMMSS2Sec(e.ArrivalTime), "PT_Event"),
-				ToPoint:   ts.Point(e.ToStop, HHMMSS2Sec(e.ArrivalTime), "PT_Stop"),
+				FromPoint: ts.Point(e.ToStop, gtfs.HHMMSS2Sec(e.ArrivalTime), "PT_Event"),
+				ToPoint:   ts.Point(e.ToStop, gtfs.HHMMSS2Sec(e.ArrivalTime), "PT_Stop"),
 				TypeIndex: ts.SetType("ET_PT2Stop"),
 			})
 		}
