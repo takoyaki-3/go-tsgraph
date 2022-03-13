@@ -4,7 +4,7 @@ import (
 	"io/ioutil"
 
 	"github.com/golang/protobuf/proto"
-	pb "github.com/takoyaki-3/go-tsgraph/pb"
+	pb "github.com/takoyaki-3/go-tsgraph/v2/pb"
 )
 
 func LoadFromPath(fileName string) (*TSGraph, error) {

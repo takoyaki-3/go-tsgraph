@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	tsg "github.com/takoyaki-3/go-tsgraph"
+	tsg "github.com/takoyaki-3/go-tsgraph/v2"
 )
 
 func main() {
